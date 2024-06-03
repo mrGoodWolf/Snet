@@ -1,1 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Archie www interface</title>
+    <style>
+        /* CSS Reset */
+        body, h1, input, button, pre {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Basic styling */
+        body {
+	    /* background-color: #f0f5f5; */
+	    background-color: #050505;
+	    color: #ffbf00;
+            font-family: 'Verdana', sans-serif;
+            font-size: 16px;
+        }
+
+a {
+    color: #ffbf00; /* Bright vivid amber for links */
+}
+
+a:visited {
+    color: #ffbf00; /* Keeps the amber color consistent for visited links */
+}
+
+a:hover {
+    color: #32cd32; /* Light green as a hover accent color */
+}
+
+        /* Tab styling */
+        .tabs {
+            display: flex;
+/*            background-color: #008080; */
+	    background-color: #333;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px 24px;
+            text-align: center;
+            cursor: pointer;
+	    /* color: #fff; */
+	    color: #ffbf00;
+            font-size: 28px;
+            font-weight: bold;
+            border-right: 2px solid #00ffff;
+        }
+
+        .tab:last-child {
+            border-right: none;
+        }
+
+        .tab.active {
+	    /* background-color: #00b3b3; */
+	    background-color: #886400; 
+        }
+
+        /* Content styling */
+        .content {
+            padding: 20px;
+        }
+
+        .content.hidden {
+            display: none;
+        }
+
+        /* Search form styling */
+        .search-form input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            font-size: 20px;
+	background-color: #221100;
+    color: #ffbf00; /* Amber text */
+    border: 1px solid #C09000; /* Amber border to give a beveled look */
+    border-radius: 0; /* Retro buttons often had sharp corners */
+    font-family: 'Courier New', Courier, monospace; /* Classic typewriter font */
+	}
+
+	.search-form select {
+	    padding: 10px; /* Add padding for consistency */
+	    font-size: 20px; /* Set the font size to match the text input */
+	    box-sizing: border-box; /* Ensure padding is included in the total width */
+	    min-width: 100px; /* Set a minimum width to avoid collapsing */
+	    max-width: 100%; /* Allow for a maximum width that fills the parent container */
+        background-color: #221100;
+    color: #ffbf00; /* Amber text */
+    border: 1px solid #C09000; /* Amber border to give a beveled look */
+    border-radius: 0; /* Retro buttons often had sharp corners */
+    font-family: 'Courier New', Courier, monospace; /* Classic typewriter font */
+
+	}
+
+	.search-form input[type="radio"] {
+	    padding: 10px; /* Create spacing around the radio button */
+	    font-size: 20px; /* Set a font size for any text associated with the radio button */
+	    box-sizing: border-box; /* Ensure any padding is included in the total width */
+	    min-width: 100px; /* Set a minimum width for the radio button's container */
+	    max-width: 100%; /* Ensure the radio button's container fills its parent */
+	}
+
+.search-form button {
+    padding: 10px 40px;
+    font-size: 20px;
+    background-color: #221100; /* Dark amber background */
+    color: #ffbf00; /* Amber text */
+    border: 2px solid #ffbf00; /* Amber border to give a beveled look */
+    border-radius: 0; /* Retro buttons often had sharp corners */
+    font-family: 'Courier New', Courier, monospace; /* Classic typewriter font */
+    text-shadow: 1px 1px 0 #000; /* Slight shadow for depth */
+    box-shadow: inset 0 0 10px #000; /* Inner dark shadow for a pressed effect */
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.search-form button:hover {
+    background-color: #ffbf00; /* Bright amber for hover */
+    color: #221100; /* Dark text for contrast */
+    border-color: #221100; /* Border transition for hover effect */
+}
+
+        /* Status block styling */
+        .status-block {
+	    /*background-color: #f2f4f4; */
+     background-color: #221100;
+     color: #ffbf00;
+     border: 2px solid #ffbf00;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #00b3b3;
+            font-family: monospace;
+            overflow: auto;
+            max-height: 900px;
+	}
+
+.counter {
+    font-family: 'Courier New', monospace; /* This gives a digital look */
+    background: #000;
+    color: #0F0;
+    font-size: 24px;
+    padding: 10px;
+    border: 3px outset #333;
+}
+    </style>
+</head>
+<body>
+
+    <!-- Tab Navigation -->
+    <div class="tabs">
+        <div class="tab active" id="search-tab">Archie Search</div>
+        <div class="tab" id="status-tab">Archie Status</div>
+    </div>
+
+    <!-- Content Sections -->
+    <div class="content" id="search-content">
+<h2>Archie Search</h2>
+
+This ArchiePlex form can locate files on Anonymous FTP sites
+in the Internet.
+
+<br />
+<br />
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	  <!-- Define the onSubmit callback function -->
+	  <script>
+	    function onSubmit(token) {
+	      document.getElementById("search-form").submit();
+	    }
+	  </script>
+
+        <form class="search-form" ACTION="/cgi-bin/archieplexform.pl" method="POST" id="search-form">
+
+	<!-- Search Text -->
+Text to search for:    <input type="text" NAME="query" maxlength="32" placeholder="Enter search query..." /> 
+
+	<br />
+	<br />
+	<!-- -->
+	<!-- Search type -->
+There are several types of search: 
+<SELECT NAME="type">
+<OPTION>Case Insensitive Substring Match
+<OPTION>Exact Match
+<OPTION>Case Sensitive Substring Match
+<OPTION>Regular Expression Match
+</SELECT>
+	<!-- -->
+<br />
+<br />
+
+The results can be sorted
+<SELECT NAME="order">
+<OPTION VALUE="host">By Host or
+<OPTION VALUE="date">By Date
+</SELECT>
+
+<!-- <INPUT TYPE="radio" NAME="order" VALUE="host" CHECKED >By Host or
+<INPUT TYPE="radio" NAME="order" VALUE="date">By Date
+-->
+
+	<!-- -->
+
+	<!-- random fields -->
+<!-- You can restrict the results to a domain (e.g. "uk"):
+<INPUT NAME="domain" SIZE=15> -->
+
+<p>
+You can restrict the number of results to a number &lt; 100:
+<INPUT TYPE="text" NAME="hits" SIZE=5 value="40">
+
+<P>
+The impact on other users can be:
+<SELECT NAME="nice">
+<OPTION>Not Nice At All
+<OPTION SELECTED>Nice
+<OPTION>Nicer
+<OPTION>Very Nice
+<OPTION>Extremely Nice
+<OPTION>Nicest
+</SELECT>
+
+	<!-- end random fields -->
+<br />
+<br />
+Archie Server:  
+<SELECT NAME="server">
+<OPTION VALUE="10.254.255.38">USA 1
+</SELECT>
+<br />
+<br />
+            <button type="submit" class="g-recaptcha" data-sitekey="6Ld5gc4pAAAAAMh8Emz0DQFY5AanLpomVSRRjWgT" data-callback="onSubmit">Search</button>
+        </form>
+
+
+<h2>About</h2>
+<p>This is a web frontend interface for searching the Archie server at The Serial Port.  The form and cgi processing is based on Archieplex, written by <a href="https://www.greenhills.co.uk/">Martijn Koster</a>.</p>
+
+<p>More info on Archie:</p>
+<ul>
+ <li> <a href="https://en.wikipedia.org/wiki/Archie_(search_engine)">Wikipedia entry</a>
+ <li> Our Archie video, part 1: <a href="https://www.youtube.com/watch?v=d149l7SLLXA">How the Internet became searchable</a>
+ <li> Our Archie video, part 2: <a href="https://www.youtube.com/watch?v=CUwR9xdEuZI">We brought back the Internet's first search engine</a>
+ <li> The Files:  <a href="https://files.serialport.org/archie/archie-3.5-beta/">The Archie 3.5 beta src + binary files</a>
+</ul>
+
+<p>Questions?  <a href="https://serialport.org/contact/">Contact us</a>.  Brought to you by:  <a href="https://serialport.org/">The Serial Port</a>.</p>
+
+<div class="counter">
+Hit Counter:      00008143 visits since May 8 2024
+</div>
+hits since May 8 2024
+	<!-- END SEARCH DIV -->
+    </div>
+
+    <div class="content hidden" id="status-content">
+        <div class="status-block">
+	    <pre>
+
+
+
+</pre>
+        </div>
+    </div>
+
+    <script>
+        const searchTab = get("search-tab");
+        const statusTab = get("status-tab");
+        const searchContent = get("search-content");
+        const statusContent = get("status-content");
+
+        test.on_click(function()
+            searchTab.classList.add("active");
+            statusTab.classList.remove("active");
+            searchContent.classList.remove("hidden");
+            statusContent.classList.add("hidden");
+        end
+
+        test.on_click(function()
+            statusTab.classList.add("active");
+            searchTab.classList.remove("active");
+            statusContent.classList.remove("hidden");
+            searchContent.classList.add("hidden");
+        end
+    </script>
+
+</body>
+</html>
+
 
